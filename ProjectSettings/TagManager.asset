@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
+  - Walkable
   - 
   - 
   - 
@@ -41,15 +41,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Parallax
+    uniqueID: 3506525469
+    locked: 0
   - name: Background
     uniqueID: 2518574707
-    locked: 0
-  - name: Foreground
-    uniqueID: 2128141935
     locked: 0
   - name: Ground
     uniqueID: 2428063369
     locked: 0
+  - name: Objects
+    uniqueID: 1246412175
+    locked: 0
   - name: Player
     uniqueID: 2167585547
+    locked: 0
+  - name: Collectables
+    uniqueID: 583160251
+    locked: 0
+  - name: Foreground
+    uniqueID: 2128141935
     locked: 0

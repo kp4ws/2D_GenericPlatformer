@@ -2,23 +2,32 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private PlayerInput input;
+    //Inspector variables
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float jumpSpeed = 5f;
-    [SerializeField] private float climbSpeed = 5f;
+    [SerializeField] private float climbSpeed = 5f; //TODO
+    [SerializeField] private BoxCollider2D groundCheck;
+    [SerializeField] private BoxCollider2D ceilingCheck; //TODO not sure if I need both of these?
+    [SerializeField] private LayerMask groundLayer;
 
+    //Cached references
     private Rigidbody2D rb;
     private Animator anim;
 
-    private BoxCollider2D groundCheck;
-    private BoxCollider2D ceilingCheck; //TODO not sure if I need both of these?
+    //Status checks
+    private bool isJumping;
 
+    //Player animation
+    private int speedParamID;
+    private int jumpParamID;
 
     void Start()
     {
-        input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
+        jumpParamID = Animator.StringToHash("isJumping");
+        speedParamID = Animator.StringToHash("runSpeed");
     }
 
     private void Update()
@@ -28,20 +37,37 @@ public class PlayerMovement : MonoBehaviour
         FlipSprite();
         ClimbLadder();
         Die();
+
+        anim.SetFloat(speedParamID, Mathf.Abs(rb.velocity.x));
+        anim.SetBool(jumpParamID, isJumping);
     }
 
     private void Run()
     {
-        Vector2 playerVelocity = new Vector2(input.horizontalInput * runSpeed, rb.velocity.y);
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        Vector2 playerVelocity = new Vector2(horizontalInput * runSpeed, rb.velocity.y);
         rb.velocity = playerVelocity;
-
-        anim.SetFloat("runSpeed", Mathf.Abs(rb.velocity.x)); //TODO set String to hash
     }
 
     private void Jump()
     {
+        if (!groundCheck.IsTouchingLayers(groundLayer))
+        {
+            isJumping = true;
+            return;
+        }
+        else if(Input.GetButtonDown("Jump"))
+        {
+            Vector2 jumpVelocity = new Vector2(0f, jumpSpeed);
+            rb.velocity += jumpVelocity;
+        }
+        else
+        {
+            isJumping = false;
+        }
+
     }
-    
+
     private void ClimbLadder()
     {
     }
