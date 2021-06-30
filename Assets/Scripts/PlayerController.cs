@@ -1,18 +1,17 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]//TODO Add box collider to this? 
+public class PlayerController : MonoBehaviour
 {
     //Inspector variables
-    [SerializeField] private float runSpeed = 5f;
-    [SerializeField] private float jumpSpeed = 5f;
-    [SerializeField] private float climbSpeed = 5f; //TODO
     [SerializeField] private BoxCollider2D groundCheck;
-    [SerializeField] private BoxCollider2D ceilingCheck; //TODO not sure if I need both of these?
     [SerializeField] private LayerMask groundLayer;
 
-    //Cached references
-    private Rigidbody2D rb;
-    private Animator anim;
+    //Player values
+    [SerializeField] private float runSpeed = 5f;
+    [SerializeField] private float jumpSpeed = 5f;
+    [SerializeField] private float climbSpeed = 5f;
+    [SerializeField] private Vector2 hurtRecoil = new Vector2(5f,5f);
 
     //Status checks
     private bool isJumping;
@@ -21,9 +20,26 @@ public class PlayerMovement : MonoBehaviour
     private int speedParamID;
     private int jumpParamID;
 
+    //Cached references
+    private Rigidbody2D rb;
+    private BoxCollider2D bodyCollider;
+    private Animator anim;
+
+
+    /*******
+     * 
+     * TODO:
+     * -Add Raycasts for status checks, collision detection, etc
+     * 
+     * 
+     */
+
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        bodyCollider = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
 
         jumpParamID = Animator.StringToHash("isJumping");
@@ -53,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!groundCheck.IsTouchingLayers(groundLayer))
         {
-            isJumping = true;
+            //isJumping = true;
             return;
         }
         else if(Input.GetButtonDown("Jump"))
@@ -74,6 +90,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Die()
     {
+        if(bodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Hazards")))
+        {
+            GetComponent<Animator>().SetTrigger("hurt");
+            hurtRecoil.x *= -transform.localScale.x;
+            rb.AddForce(hurtRecoil, ForceMode2D.Impulse); //TODO
+        }
     }
 
     private void FlipSprite()

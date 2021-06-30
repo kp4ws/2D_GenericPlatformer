@@ -13,8 +13,8 @@ TagManager:
   - UI
   - Player
   - Walkable
-  - 
-  - 
+  - Enemy
+  - Hazards
   - 
   - 
   - 
@@ -53,14 +53,17 @@ TagManager:
   - name: Objects
     uniqueID: 1246412175
     locked: 0
-  - name: Enemies
+  - name: Collectables
+    uniqueID: 583160251
+    locked: 0
+  - name: Hazards
+    uniqueID: 1861569133
+    locked: 0
+  - name: Enemy
     uniqueID: 3095235517
     locked: 0
   - name: Player
     uniqueID: 2167585547
-    locked: 0
-  - name: Collectables
-    uniqueID: 583160251
     locked: 0
   - name: Foreground
     uniqueID: 2128141935
